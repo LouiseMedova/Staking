@@ -1,57 +1,110 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.6;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
+import './Token.sol';
+
  
 contract Staking is ReentrancyGuard{
     
-    struct Staker{
+    struct Staker {
         uint balance;
-        uint missedRewards;
+        uint rewardAllowed;
+        uint rewardDebt;
+        uint distributed;
     } 
+
+    event Staked (
+        address staker,
+        uint amount
+    ); 
+
+    event Withdrawn (
+        address staker,
+        uint amount
+    );
+
+    event Reward (
+        address staker,
+        uint reward
+    );
 
     mapping(address => Staker) public stakers;
 
-    uint public tps;
-    uint public savedTps;
-    uint public savedTime;
+    uint public tokensPerStake;
+
     uint public totalStaked;
-    uint public dailyReward;
-    uint public duration;
-    uint public updateTime;
+
+    uint public distributionTime;
+    uint public rewardProduced;
+    uint public rewardTotal;
+    uint public withdrawn;
+    
     address public stakingToken;
     address public rewardToken;
+    uint public producedTime;
 
-    constructor(address _stakingToken, address _rewardToken, uint _dailyReward, uint _duration) {
+    constructor(address _stakingToken, address _rewardToken, uint _rewardTotal, uint _distributionTime) {
         stakingToken = _stakingToken;
         rewardToken = _rewardToken;
-        updateTime = block.timestamp;
-        dailyReward = _dailyReward;
-        duration = _duration;
+        rewardTotal = _rewardTotal;
+        distributionTime = _distributionTime;
+        producedTime = block.timestamp;        
     }
 
-    function stake (uint _amount) external {
+    function stake (uint _amount) nonReentrant external {
+        require(_amount > 0, '_amount must be > 0');
+        update();
+        Staker storage staker = stakers[msg.sender];
+        staker.rewardDebt += (_amount * tokensPerStake) / (1e20);
+        staker.balance += _amount;
+        totalStaked += _amount;
+        Token(stakingToken).transferFrom(msg.sender, address(this), _amount);
+        emit Staked(msg.sender, _amount);
+    }
+
+    function withdraw (uint _amount) nonReentrant external {
         require(_amount > 0, '_amount must be > 0');
         Staker storage staker = stakers[msg.sender];
-        staker.balance += _amount;
-        staker.missedRewards += _amount * tps;
-        totalStaked += _amount;
+        require(staker.balance > 0, 'balance of staker must be >= withdrawn amount');
         update();
-        ERC20(stakingToken).transferFrom(msg.sender, address(this), _amount);
+        staker.rewardAllowed +=  (_amount * tokensPerStake) / (1e20);
+        staker.balance -= _amount;
+        totalStaked -= _amount;
+        Token(stakingToken).transfer(msg.sender, _amount);
+        emit Withdrawn(msg.sender, _amount);
     }
 
-    function getCurrentReward(address _staker) public view returns(uint) {
-        return  (tps * stakers[_staker].balance - stakers[_staker].missedRewards) / (1e20);
+    function getReward() external nonReentrant {
+         update();
+         uint reward = calcReward(msg.sender,  tokensPerStake);
+         if (reward > 0) {
+            stakers[msg.sender].distributed += reward;
+            Token(rewardToken).transfer(msg.sender, reward);
+            emit Reward(msg.sender, reward);
+         }
+    }
+
+    function calcReward(address _staker, uint _tps) 
+        private 
+        view 
+        returns (uint reward) {
+            Staker storage staker = stakers[_staker];
+            reward = (staker.balance*_tps)/(1e20) + staker.rewardAllowed - staker.rewardDebt - staker.distributed;
+        }
+
+    function produced() private view returns (uint) {
+        return rewardTotal * (block.timestamp - producedTime) / distributionTime;
     }
 
     function update() internal {
-        uint passedTime = (block.timestamp - updateTime)/(duration);
-        if(passedTime >  0) {
-            savedTps = tps;
-            savedTime = passedTime;
-            updateTime = block.timestamp;
+        uint rewardProducedAtNow = produced();
+        if(rewardProducedAtNow > rewardProduced) {
+            uint producedNew = rewardProducedAtNow - rewardProduced;
+            if( totalStaked > 0) {
+                tokensPerStake += producedNew * 1e20 / totalStaked;
+            }
+            rewardProduced += producedNew;
         }
-        tps = (savedTps*savedTime) + (1e20 * dailyReward) / totalStaked;
     }
 }
