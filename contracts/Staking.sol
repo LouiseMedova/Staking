@@ -66,7 +66,7 @@ contract Staking is ReentrancyGuard{
     function withdraw (uint _amount) nonReentrant external {
         require(_amount > 0, '_amount must be > 0');
         Staker storage staker = stakers[msg.sender];
-        require(staker.balance > 0, 'balance of staker must be >= withdrawn amount');
+        require(staker.balance >= _amount, 'balance of staker must be >= withdrawn amount');
         update();
         staker.rewardAllowed +=  (_amount * tokensPerStake) / (1e20);
         staker.balance -= _amount;
@@ -75,7 +75,7 @@ contract Staking is ReentrancyGuard{
         emit Withdrawn(msg.sender, _amount);
     }
 
-    function getReward() external nonReentrant {
+    function getReward() nonReentrant external {
          update();
          uint reward = calcReward(msg.sender,  tokensPerStake);
          if (reward > 0) {
