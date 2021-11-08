@@ -5,8 +5,8 @@ import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
 import './Token.sol';
 
  
-contract Staking is ReentrancyGuard{
-    
+contract Staking is ReentrancyGuard, AccessControl{
+    bytes32 public constant ADMIN = keccak256("ADMIN");
     struct Staker {
         uint balance;
         uint rewardAllowed;
@@ -38,18 +38,27 @@ contract Staking is ReentrancyGuard{
     uint public distributionTime;
     uint public rewardProduced;
     uint public rewardTotal;
-    uint public withdrawn;
+    uint public allProduced;
     
     address public stakingToken;
     address public rewardToken;
     uint public producedTime;
 
-    constructor(address _stakingToken, address _rewardToken, uint _rewardTotal, uint _distributionTime) {
+    constructor(address _stakingToken, address _rewardToken, uint _distributionTime) {
         stakingToken = _stakingToken;
         rewardToken = _rewardToken;
-        rewardTotal = _rewardTotal;
         distributionTime = _distributionTime;
-        producedTime = block.timestamp;        
+        producedTime = block.timestamp;
+        _setupRole(ADMIN, msg.sender);        
+    }
+
+    function setRewardTotal(uint _rewardTotal) onlyRole(ADMIN) external {
+        require(_rewardTotal > 0, '_rewardTotal must be > 0');
+        require(Token(rewardToken).balanceOf(address(this)) >= _rewardTotal, 'The contract must have enough reward tokens');
+        update();
+        allProduced = rewardProduced;
+        producedTime = block.timestamp;
+        rewardTotal = _rewardTotal;
     }
 
     function stake (uint _amount) nonReentrant external {
@@ -85,18 +94,6 @@ contract Staking is ReentrancyGuard{
          }
     }
 
-    function calcReward(address _staker, uint _tps) 
-        private 
-        view 
-        returns (uint reward) {
-            Staker storage staker = stakers[_staker];
-            reward = (staker.balance*_tps)/(1e20) + staker.rewardAllowed - staker.rewardDebt - staker.distributed;
-        }
-
-    function produced() private view returns (uint) {
-        return rewardTotal * (block.timestamp - producedTime) / distributionTime;
-    }
-
     function update() internal {
         uint rewardProducedAtNow = produced();
         if(rewardProducedAtNow > rewardProduced) {
@@ -107,4 +104,36 @@ contract Staking is ReentrancyGuard{
             rewardProduced += producedNew;
         }
     }
+
+    function calcReward(address _staker, uint _tps) 
+        private 
+        view 
+        returns (uint reward) {
+            Staker storage staker = stakers[_staker];
+            reward = (staker.balance*_tps)/(1e20) + staker.rewardAllowed - staker.rewardDebt - staker.distributed;
+        }
+
+    function produced() private view returns (uint) {
+        return allProduced + rewardTotal * (block.timestamp - producedTime) / distributionTime;
+    }
+    
+    function getRewardOfStaker(address _staker) 
+        public 
+        view 
+        returns(uint reward) {
+            uint rewardProducedAtNow = produced();
+            uint _tps = tokensPerStake;
+            if(rewardProducedAtNow > rewardProduced && totalStaked > 0) {
+                uint producedNew = rewardProducedAtNow - rewardProduced;
+                _tps +=  producedNew * 1e20 / totalStaked;
+            }
+            reward = calcReward(_staker, _tps); 
+    }
+
+    function getStakerInfo(address _staker)
+        public
+        view
+        returns(Staker memory staker) {
+            staker = stakers[_staker];
+        }
 }
