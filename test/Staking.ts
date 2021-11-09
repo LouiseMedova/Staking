@@ -59,333 +59,333 @@ describe('Staking', () => {
 
 	})
 
-	// describe('Stake', () => {
-	// 	it('should update the produced rewards, tokens per stake and total amount of staked tokens', async() => {
-	// 		await staking.stake(1000)
-	// 		let expectedRewardProduced = 0;
-	// 		let expectedTokensPerStake = 0;
-	// 		let expectedTotalStaked = 1000;			
-	// 		expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)
-	// 		expect(await staking.tokensPerStake()).to.equal(expectedRewardProduced)
-	// 		expect(await staking.totalStaked()).to.equal(expectedTotalStaked)
+	describe('Stake', () => {
+		it('should update the produced rewards, tokens per stake and total amount of staked tokens', async() => {
+			await staking.stake(1000)
+			let expectedRewardProduced = 0;
+			let expectedTokensPerStake = 0;
+			let expectedTotalStaked = 1000;			
+			expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)
+			expect(await staking.tokensPerStake()).to.equal(expectedRewardProduced)
+			expect(await staking.totalStaked()).to.equal(expectedTotalStaked)
 
-	// 		let time = 86401;
-	// 		await network.provider.send("evm_increaseTime", [time])
-	// 		await staking.stake(1000)
-	// 		expectedRewardProduced += Math.trunc(rewardTotal*time/distrbutionTime);
-	// 		expectedTokensPerStake += Math.trunc(rewardPerDay * (1e20) / expectedTotalStaked);
-	// 		expectedTotalStaked += 1000;
-	// 		expect(await staking.totalStaked()).to.equal(expectedTotalStaked)
-	// 		expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
-	// 		expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
+			let time = 86401;
+			await network.provider.send("evm_increaseTime", [time])
+			await staking.stake(1000)
+			expectedRewardProduced += Math.trunc(rewardTotal*time/distrbutionTime);
+			expectedTokensPerStake += Math.trunc(rewardPerDay * (1e20) / expectedTotalStaked);
+			expectedTotalStaked += 1000;
+			expect(await staking.totalStaked()).to.equal(expectedTotalStaked)
+			expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
+			expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
 
-	// 		await network.provider.send("evm_increaseTime", [2*time])
-	// 		await staking.stake(2000)
-	// 		expectedRewardProduced += Math.trunc(rewardTotal*2*time/distrbutionTime);
-	// 		expectedTokensPerStake += Math.trunc(rewardPerDay*2* (1e20) / expectedTotalStaked);
-	// 		expectedTotalStaked += 2000;
-	// 		expect(await staking.totalStaked()).to.equal(expectedTotalStaked)
-	// 		expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
-	// 		expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
+			await network.provider.send("evm_increaseTime", [2*time])
+			await staking.stake(2000)
+			expectedRewardProduced += Math.trunc(rewardTotal*2*time/distrbutionTime);
+			expectedTokensPerStake += Math.trunc(rewardPerDay*2* (1e20) / expectedTotalStaked);
+			expectedTotalStaked += 2000;
+			expect(await staking.totalStaked()).to.equal(expectedTotalStaked)
+			expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
+			expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
 
-	// 		await network.provider.send("evm_increaseTime", [4*time])
-	// 		await staking.stake(3000)
-	// 		expectedRewardProduced += Math.trunc(rewardTotal*4*time/distrbutionTime);
-	// 		expectedTokensPerStake += Math.trunc(rewardPerDay*4* (1e20) / expectedTotalStaked);
-	// 		expectedTotalStaked += 3000;
-	// 		expect(await staking.totalStaked()).to.equal(expectedTotalStaked)
-	// 		expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
-	// 		expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
-	// 	})
+			await network.provider.send("evm_increaseTime", [4*time])
+			await staking.stake(3000)
+			expectedRewardProduced += Math.trunc(rewardTotal*4*time/distrbutionTime);
+			expectedTokensPerStake += Math.trunc(rewardPerDay*4* (1e20) / expectedTotalStaked);
+			expectedTotalStaked += 3000;
+			expect(await staking.totalStaked()).to.equal(expectedTotalStaked)
+			expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
+			expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
+		})
 		
-	// 	it('should not update the produced rewards, tokens per stake if not enough time has passed', async () => {
-	// 		await staking.stake(1000)
-	// 		let expectedRewardProduced = 0;
-	// 		let expectedTokensPerStake = 0;
-	// 		let expectedTotalStaked = 1000;			
+		it('should not update the produced rewards, tokens per stake if not enough time has passed', async () => {
+			await staking.stake(1000)
+			let expectedRewardProduced = 0;
+			let expectedTokensPerStake = 0;
+			let expectedTotalStaked = 1000;			
 	
-	// 		let time = 86401;
-	// 		await network.provider.send("evm_increaseTime", [time])
-	// 		await staking.stake(1000)
-	// 		expectedRewardProduced += Math.trunc(rewardTotal*time/distrbutionTime);
-	// 		expectedTokensPerStake += Math.trunc(rewardPerDay * (1e20) / expectedTotalStaked);
-	// 		expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
-	// 		expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
+			let time = 86401;
+			await network.provider.send("evm_increaseTime", [time])
+			await staking.stake(1000)
+			expectedRewardProduced += Math.trunc(rewardTotal*time/distrbutionTime);
+			expectedTokensPerStake += Math.trunc(rewardPerDay * (1e20) / expectedTotalStaked);
+			expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
+			expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
 
-	// 		await staking.stake(1000)
-	// 		await staking.stake(1000)
-	// 		await staking.stake(1000)
-	// 		expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
-	// 		expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
-	// 	})
+			await staking.stake(1000)
+			await staking.stake(1000)
+			await staking.stake(1000)
+			expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
+			expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
+		})
 
-	// 	it('should update staker struct', async() => {
-	// 		await staking.stake(1000)
-	// 		let expectedDebt = 0;
-	// 		let tps = 0;
-	// 		let expectedBalance = 1000;
-	// 		let staker = await staking.stakers(user0.address)
-	// 		expect(staker.rewardDebt).to.equal(expectedDebt)
-	// 		expect(staker.balance).to.equal(expectedBalance)
+		it('should update staker struct', async() => {
+			await staking.stake(1000)
+			let expectedDebt = 0;
+			let tps = 0;
+			let expectedBalance = 1000;
+			let staker = await staking.stakers(user0.address)
+			expect(staker.rewardDebt).to.equal(expectedDebt)
+			expect(staker.balance).to.equal(expectedBalance)
 
-	// 		let time = 86401;
-	// 		await network.provider.send("evm_increaseTime", [time])
-	// 		await staking.stake(1000)
-	// 		tps += rewardPerDay/1000;
-	// 		expectedDebt += Math.trunc(tps * 1000);
-	// 		expectedBalance += 1000;
-	// 		staker = await staking.stakers(user0.address)
-	// 		expect(staker.rewardDebt).to.equal(expectedDebt)
-	// 		expect(staker.balance).to.equal(expectedBalance)
+			let time = 86401;
+			await network.provider.send("evm_increaseTime", [time])
+			await staking.stake(1000)
+			tps += rewardPerDay/1000;
+			expectedDebt += Math.trunc(tps * 1000);
+			expectedBalance += 1000;
+			staker = await staking.stakers(user0.address)
+			expect(staker.rewardDebt).to.equal(expectedDebt)
+			expect(staker.balance).to.equal(expectedBalance)
 
-	// 		await network.provider.send("evm_increaseTime", [2*time])
-	// 		await staking.stake(2000)
-	// 		tps += rewardPerDay*2/2000;
-	// 		expectedDebt += Math.trunc(tps * 2000);
-	// 		expectedBalance += 2000;
-	// 		staker = await staking.stakers(user0.address)
-	// 		expect(staker.rewardDebt).to.equal(expectedDebt)
-	// 		expect(staker.balance).to.equal(expectedBalance)
+			await network.provider.send("evm_increaseTime", [2*time])
+			await staking.stake(2000)
+			tps += rewardPerDay*2/2000;
+			expectedDebt += Math.trunc(tps * 2000);
+			expectedBalance += 2000;
+			staker = await staking.stakers(user0.address)
+			expect(staker.rewardDebt).to.equal(expectedDebt)
+			expect(staker.balance).to.equal(expectedBalance)
 
-	// 		await network.provider.send("evm_increaseTime", [5*time])
-	// 		await staking.stake(3000)
-	// 		tps += rewardPerDay*5/4000;
-	// 		expectedDebt += Math.trunc(tps * 3000);
-	// 		expectedBalance += 3000;
-	// 		staker = await staking.stakers(user0.address)
-	// 		expect(staker.rewardDebt).to.equal(expectedDebt)
-	// 		expect(staker.balance).to.equal(expectedBalance)
-	// 	})
+			await network.provider.send("evm_increaseTime", [5*time])
+			await staking.stake(3000)
+			tps += rewardPerDay*5/4000;
+			expectedDebt += Math.trunc(tps * 3000);
+			expectedBalance += 3000;
+			staker = await staking.stakers(user0.address)
+			expect(staker.rewardDebt).to.equal(expectedDebt)
+			expect(staker.balance).to.equal(expectedBalance)
+		})
 
-	// 	it('should revert if amount = 0', async () => {
-	// 		await expect(
-	// 			staking.stake(0))
-	// 				.to
-	// 				.be.revertedWith('_amount must be > 0')
-	// 	})
+		it('should revert if amount = 0', async () => {
+			await expect(
+				staking.stake(0))
+					.to
+					.be.revertedWith('_amount must be > 0')
+		})
 
-	// 	it('should emit `Staked` event', async() => {
-	// 		await expect(staking.connect(user0).stake(1000))
-	// 			.to.emit(staking, 'Staked')
-	// 			.withArgs(
-	// 				user0.address,
-	// 				1000
-	// 			)
-	// 		const balance = await stakingToken.balanceOf(staking.address)
-	// 		expect(balance).to.equal(1000)
-	// 	})
+		it('should emit `Staked` event', async() => {
+			await expect(staking.connect(user0).stake(1000))
+				.to.emit(staking, 'Staked')
+				.withArgs(
+					user0.address,
+					1000
+				)
+			const balance = await stakingToken.balanceOf(staking.address)
+			expect(balance).to.equal(1000)
+		})
 
-	// })
+	})
 
-	// describe('Withdraw', () => {
-	// 	it('should update the produced rewards, tokens per stake and total amount of staked tokens', async() => {
-	// 		await staking.stake(10000)
-	// 		let expectedRewardProduced = 0;
-	// 		let expectedTokensPerStake = 0;
-	// 		let expectedTotalStaked = 10000;			
-	// 		expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)
-	// 		expect(await staking.tokensPerStake()).to.equal(expectedRewardProduced)
-	// 		expect(await staking.totalStaked()).to.equal(expectedTotalStaked)
+	describe('Withdraw', () => {
+		it('should update the produced rewards, tokens per stake and total amount of staked tokens', async() => {
+			await staking.stake(10000)
+			let expectedRewardProduced = 0;
+			let expectedTokensPerStake = 0;
+			let expectedTotalStaked = 10000;			
+			expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)
+			expect(await staking.tokensPerStake()).to.equal(expectedRewardProduced)
+			expect(await staking.totalStaked()).to.equal(expectedTotalStaked)
 
-	// 		let time = 86401;
-	// 		await network.provider.send("evm_increaseTime", [time])
-	// 		await staking.withdraw(2000)
-	// 		expectedRewardProduced += Math.trunc(rewardTotal*time/distrbutionTime);
-	// 		expectedTokensPerStake += Math.trunc(rewardPerDay * (1e20) / expectedTotalStaked);
-	// 		expectedTotalStaked -= 2000;
-	// 		expect(await staking.totalStaked()).to.equal(expectedTotalStaked)
-	// 		expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
-	// 		expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
+			let time = 86401;
+			await network.provider.send("evm_increaseTime", [time])
+			await staking.withdraw(2000)
+			expectedRewardProduced += Math.trunc(rewardTotal*time/distrbutionTime);
+			expectedTokensPerStake += Math.trunc(rewardPerDay * (1e20) / expectedTotalStaked);
+			expectedTotalStaked -= 2000;
+			expect(await staking.totalStaked()).to.equal(expectedTotalStaked)
+			expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
+			expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
 			
-	// 		await network.provider.send("evm_increaseTime", [2*time])
-	// 		await staking.withdraw(3000)
-	// 		expectedRewardProduced += Math.trunc(rewardTotal*2*time/distrbutionTime);
-	// 		expectedTokensPerStake += Math.trunc(rewardPerDay*2* (1e20) / expectedTotalStaked);
-	// 		expectedTotalStaked -= 3000;
+			await network.provider.send("evm_increaseTime", [2*time])
+			await staking.withdraw(3000)
+			expectedRewardProduced += Math.trunc(rewardTotal*2*time/distrbutionTime);
+			expectedTokensPerStake += Math.trunc(rewardPerDay*2* (1e20) / expectedTotalStaked);
+			expectedTotalStaked -= 3000;
 
-	// 		expect(await staking.totalStaked()).to.equal(expectedTotalStaked)
-	// 		expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
-	// 		expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
+			expect(await staking.totalStaked()).to.equal(expectedTotalStaked)
+			expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
+			expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
 
-	// 		await network.provider.send("evm_increaseTime", [4*time])
-	// 		await staking.withdraw(1000)
-	// 		expectedRewardProduced += Math.trunc(rewardTotal*4*time/distrbutionTime);
-	// 		expectedTokensPerStake += Math.trunc(rewardPerDay*4* (1e20) / expectedTotalStaked);
-	// 		expectedTotalStaked -= 1000;
-	// 		expect(await staking.totalStaked()).to.equal(expectedTotalStaked)
-	// 		expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
-	// 		expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
-	// 	})
+			await network.provider.send("evm_increaseTime", [4*time])
+			await staking.withdraw(1000)
+			expectedRewardProduced += Math.trunc(rewardTotal*4*time/distrbutionTime);
+			expectedTokensPerStake += Math.trunc(rewardPerDay*4* (1e20) / expectedTotalStaked);
+			expectedTotalStaked -= 1000;
+			expect(await staking.totalStaked()).to.equal(expectedTotalStaked)
+			expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
+			expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
+		})
 		
-	// 	it('should not update the produced rewards, tokens per stake if not enough time has passed', async () => {
-	// 		await staking.stake(1000)
-	// 		let expectedRewardProduced = 0;
-	// 		let expectedTokensPerStake = 0;
-	// 		let expectedTotalStaked = 1000;			
+		it('should not update the produced rewards, tokens per stake if not enough time has passed', async () => {
+			await staking.stake(1000)
+			let expectedRewardProduced = 0;
+			let expectedTokensPerStake = 0;
+			let expectedTotalStaked = 1000;			
 	
-	// 		let time = 86401;
-	// 		await network.provider.send("evm_increaseTime", [time])
-	// 		await staking.withdraw(100)
-	// 		expectedRewardProduced += Math.trunc(rewardTotal*time/distrbutionTime);
-	// 		expectedTokensPerStake += Math.trunc(rewardPerDay * (1e20) / expectedTotalStaked);
-	// 		expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
-	// 		expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
+			let time = 86401;
+			await network.provider.send("evm_increaseTime", [time])
+			await staking.withdraw(100)
+			expectedRewardProduced += Math.trunc(rewardTotal*time/distrbutionTime);
+			expectedTokensPerStake += Math.trunc(rewardPerDay * (1e20) / expectedTotalStaked);
+			expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
+			expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
 
-	// 		await staking.withdraw(100)
-	// 		await staking.withdraw(100)
-	// 		await staking.withdraw(100)
-	// 		expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
-	// 		expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
-	// 	})
+			await staking.withdraw(100)
+			await staking.withdraw(100)
+			await staking.withdraw(100)
+			expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
+			expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
+		})
 
-	// 	it('should update staker struct', async() => {
-	// 		await staking.stake(10000)
-	// 		let expectedAllowed = 0;
-	// 		let tps = 0;
-	// 		let expectedBalance = 10000;
-	// 		let staker = await staking.stakers(user0.address)
-	// 		expect(staker.rewardAllowed).to.equal(expectedAllowed)
-	// 		expect(staker.balance).to.equal(expectedBalance)
+		it('should update staker struct', async() => {
+			await staking.stake(10000)
+			let expectedAllowed = 0;
+			let tps = 0;
+			let expectedBalance = 10000;
+			let staker = await staking.stakers(user0.address)
+			expect(staker.rewardAllowed).to.equal(expectedAllowed)
+			expect(staker.balance).to.equal(expectedBalance)
 
-	// 		let time = 86401;
-	// 		await network.provider.send("evm_increaseTime", [time])
-	// 		await staking.withdraw(1000)
-	// 		tps += rewardPerDay/10000;
-	// 		expectedAllowed  += Math.trunc(tps * 1000);
-	// 		expectedBalance -= 1000;
-	// 		staker = await staking.stakers(user0.address)
-	// 		expect(staker.rewardAllowed).to.equal(expectedAllowed)
-	// 		expect(staker.balance).to.equal(expectedBalance)
+			let time = 86401;
+			await network.provider.send("evm_increaseTime", [time])
+			await staking.withdraw(1000)
+			tps += rewardPerDay/10000;
+			expectedAllowed  += Math.trunc(tps * 1000);
+			expectedBalance -= 1000;
+			staker = await staking.stakers(user0.address)
+			expect(staker.rewardAllowed).to.equal(expectedAllowed)
+			expect(staker.balance).to.equal(expectedBalance)
 
-	// 		await network.provider.send("evm_increaseTime", [2*time])
-	// 		await staking.withdraw(2000)
-	// 		tps += rewardPerDay*2/9000;
-	// 		expectedAllowed  += Math.trunc(tps * 2000);
-	// 		expectedBalance -= 2000;
-	// 		staker = await staking.stakers(user0.address)
-	// 		expect(staker.rewardAllowed).to.equal(expectedAllowed )
-	// 		expect(staker.balance).to.equal(expectedBalance)
+			await network.provider.send("evm_increaseTime", [2*time])
+			await staking.withdraw(2000)
+			tps += rewardPerDay*2/9000;
+			expectedAllowed  += Math.trunc(tps * 2000);
+			expectedBalance -= 2000;
+			staker = await staking.stakers(user0.address)
+			expect(staker.rewardAllowed).to.equal(expectedAllowed )
+			expect(staker.balance).to.equal(expectedBalance)
 
-	// 		await network.provider.send("evm_increaseTime", [5*time])
-	// 		await staking.withdraw(3000)
-	// 		tps += rewardPerDay*5/7000;
-	// 		expectedAllowed  += Math.trunc(tps * 3000);
-	// 		expectedBalance -= 3000;
-	// 		staker = await staking.stakers(user0.address)
-	// 		expect(staker.rewardAllowed).to.equal(expectedAllowed )
-	// 		expect(staker.balance).to.equal(expectedBalance)
-	// 	})
+			await network.provider.send("evm_increaseTime", [5*time])
+			await staking.withdraw(3000)
+			tps += rewardPerDay*5/7000;
+			expectedAllowed  += Math.trunc(tps * 3000);
+			expectedBalance -= 3000;
+			staker = await staking.stakers(user0.address)
+			expect(staker.rewardAllowed).to.equal(expectedAllowed )
+			expect(staker.balance).to.equal(expectedBalance)
+		})
 
-	// 	it('should revert if amount = 0', async () => {
-	// 		await expect(
-	// 			staking.withdraw(0))
-	// 				.to
-	// 				.be.revertedWith('_amount must be > 0')
-	// 	})
+		it('should revert if amount = 0', async () => {
+			await expect(
+				staking.withdraw(0))
+					.to
+					.be.revertedWith('_amount must be > 0')
+		})
 
-	// 	it('should revert if user`s balance is less than the withdrawn amount', async () => {
-	// 		await staking.stake(10000)
-	// 		await expect(
-	// 			staking.withdraw(10001))
-	// 				.to
-	// 				.be.revertedWith('balance of staker must be >= withdrawn amount')
-	// 	})
+		it('should revert if user`s balance is less than the withdrawn amount', async () => {
+			await staking.stake(10000)
+			await expect(
+				staking.withdraw(10001))
+					.to
+					.be.revertedWith('balance of staker must be >= withdrawn amount')
+		})
 
-	// 	it('should emit `Withdrawn` event', async() => {
-	// 		await staking.stake(10000)
-	// 		await expect(staking.withdraw(1000))
-	// 			.to.emit(staking, 'Withdrawn')
-	// 			.withArgs(
-	// 				user0.address,
-	// 				1000
-	// 			)
-	// 	})
+		it('should emit `Withdrawn` event', async() => {
+			await staking.stake(10000)
+			await expect(staking.withdraw(1000))
+				.to.emit(staking, 'Withdrawn')
+				.withArgs(
+					user0.address,
+					1000
+				)
+		})
 
-	// })
+	})
 
-	// describe('Get rewards', async() => {
+	describe('Get rewards', async() => {
 
-	// 	it('should update the produced rewards and tokens per stake', async() => {
-	// 		await staking.stake(10000)
-	// 		let expectedRewardProduced = 0;
-	// 		let expectedTokensPerStake = 0;
-	// 		let totalStaked = 10000;			
+		it('should update the produced rewards and tokens per stake', async() => {
+			await staking.stake(10000)
+			let expectedRewardProduced = 0;
+			let expectedTokensPerStake = 0;
+			let totalStaked = 10000;			
 	
-	// 		let time = 86401;
-	// 		await network.provider.send("evm_increaseTime", [3*time])
-	// 		await staking.getReward()
-	// 		expectedRewardProduced += Math.trunc(rewardTotal*3*time/distrbutionTime);
-	// 		expectedTokensPerStake += Math.trunc(rewardPerDay*3*(1e20) / totalStaked);
-	// 		expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
-	// 		expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
+			let time = 86401;
+			await network.provider.send("evm_increaseTime", [3*time])
+			await staking.getReward()
+			expectedRewardProduced += Math.trunc(rewardTotal*3*time/distrbutionTime);
+			expectedTokensPerStake += Math.trunc(rewardPerDay*3*(1e20) / totalStaked);
+			expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
+			expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
 
-	// 		await network.provider.send("evm_increaseTime", [5*time])
-	// 		await staking.getReward()
-	// 		expectedRewardProduced += Math.trunc(rewardTotal*5*time/distrbutionTime);
-	// 		expectedTokensPerStake += Math.trunc(rewardPerDay*5*(1e20) / totalStaked);
-	// 		expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
-	// 		expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
-	// 	})
+			await network.provider.send("evm_increaseTime", [5*time])
+			await staking.getReward()
+			expectedRewardProduced += Math.trunc(rewardTotal*5*time/distrbutionTime);
+			expectedTokensPerStake += Math.trunc(rewardPerDay*5*(1e20) / totalStaked);
+			expect(await staking.rewardProduced()).to.equal(expectedRewardProduced)			
+			expect((await staking.tokensPerStake()).toString()).to.equal(expectedTokensPerStake.toString())
+		})
 
-	// 	it('should update staker struct', async() => {
-	// 		await staking.stake(10000)
-	// 		let expectedDistributed = 0;
-	// 		let tps = 0;
-	// 		let totalAmount = 10000;
-	// 		let staker = await staking.stakers(user0.address)
-	// 		expect(staker.distributed).to.equal(expectedDistributed)
+		it('should update staker struct', async() => {
+			await staking.stake(10000)
+			let expectedDistributed = 0;
+			let tps = 0;
+			let totalAmount = 10000;
+			let staker = await staking.stakers(user0.address)
+			expect(staker.distributed).to.equal(expectedDistributed)
 
-	// 		let time = 86401;
-	// 		await network.provider.send("evm_increaseTime", [2*time])
-	// 		await staking.getReward();
-	// 		tps += 2*rewardPerDay/totalAmount;
-	// 		expectedDistributed  += totalAmount*tps - expectedDistributed;
-	// 		staker = await staking.stakers(user0.address)
-	// 		expect(staker.distributed).to.equal(expectedDistributed)
+			let time = 86401;
+			await network.provider.send("evm_increaseTime", [2*time])
+			await staking.getReward();
+			tps += 2*rewardPerDay/totalAmount;
+			expectedDistributed  += totalAmount*tps - expectedDistributed;
+			staker = await staking.stakers(user0.address)
+			expect(staker.distributed).to.equal(expectedDistributed)
 
-	// 		await network.provider.send("evm_increaseTime", [4*time])
-	// 		await staking.getReward();
-	// 		tps += rewardPerDay*4/totalAmount;
-	// 		expectedDistributed  += totalAmount*tps - expectedDistributed;		
-	// 		staker = await staking.stakers(user0.address)
-	// 		expect(staker.distributed).to.equal(expectedDistributed)
-	// 	})
+			await network.provider.send("evm_increaseTime", [4*time])
+			await staking.getReward();
+			tps += rewardPerDay*4/totalAmount;
+			expectedDistributed  += totalAmount*tps - expectedDistributed;		
+			staker = await staking.stakers(user0.address)
+			expect(staker.distributed).to.equal(expectedDistributed)
+		})
 
-	// 	it('should transfer reward tokens to staker and emit `Reward` event', async() => {
-	// 		await staking.connect(user1).stake(10000)
+		it('should transfer reward tokens to staker and emit `Reward` event', async() => {
+			await staking.connect(user1).stake(10000)
 
-	// 		let time = 86401;
-	// 		await network.provider.send("evm_increaseTime", [2*time])
-	// 		await expect(staking.connect(user1).getReward())
-	// 			.to.emit(staking, 'Reward')
-	// 			.withArgs(
-	// 				user1.address,
-	// 				200
-	// 			)
+			let time = 86401;
+			await network.provider.send("evm_increaseTime", [2*time])
+			await expect(staking.connect(user1).getReward())
+				.to.emit(staking, 'Reward')
+				.withArgs(
+					user1.address,
+					200
+				)
 
-	// 		await network.provider.send("evm_increaseTime", [5*time])
-	// 		await expect(staking.connect(user1).getReward())
-	// 			.to.emit(staking, 'Reward')
-	// 			.withArgs(
-	// 				user1.address,
-	// 				500
-	// 			)
+			await network.provider.send("evm_increaseTime", [5*time])
+			await expect(staking.connect(user1).getReward())
+				.to.emit(staking, 'Reward')
+				.withArgs(
+					user1.address,
+					500
+				)
 
-	// 		expect(await rewardToken.balanceOf(user1.address)).to.equal(700)
-	// 	})
+			expect(await rewardToken.balanceOf(user1.address)).to.equal(700)
+		})
 
-	// 	it('should transfer nothing if the reward is 0', async() => {
-	// 		await staking.connect(user0).stake(10000)
+		it('should transfer nothing if the reward is 0', async() => {
+			await staking.connect(user0).stake(10000)
 
-	// 		let time = 86401;
-	// 		await network.provider.send("evm_increaseTime", [2*time])
-	// 		await staking.connect(user1).stake(5000)
-	// 		await staking.connect(user1).getReward()
-	// 		expect(await rewardToken.balanceOf(user1.address)).to.equal(0)
+			let time = 86401;
+			await network.provider.send("evm_increaseTime", [2*time])
+			await staking.connect(user1).stake(5000)
+			await staking.connect(user1).getReward()
+			expect(await rewardToken.balanceOf(user1.address)).to.equal(0)
 
-	// 	})
+		})
 	
-	// })
+	})
 
 	describe('Get rewards of staker', async() => {
 		it('should calculate the rewards that are already available for stakers', async() => {

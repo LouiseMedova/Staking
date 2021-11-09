@@ -7,12 +7,16 @@ import './Token.sol';
  
 contract Staking is ReentrancyGuard, AccessControl{
     bytes32 public constant ADMIN = keccak256("ADMIN");
-    struct Staker {
-        uint balance;
-        uint rewardAllowed;
-        uint rewardDebt;
-        uint distributed;
-    } 
+
+    uint public tokensPerStake;
+    uint public totalStaked;
+    uint public distributionTime;
+    uint public rewardProduced;
+    uint public rewardTotal;
+    uint public allProduced;
+    address public stakingToken;
+    address public rewardToken;
+    uint public producedTime;
 
     event Staked (
         address staker,
@@ -29,20 +33,14 @@ contract Staking is ReentrancyGuard, AccessControl{
         uint reward
     );
 
+     struct Staker {
+        uint balance;
+        uint rewardAllowed;
+        uint rewardDebt;
+        uint distributed;
+    } 
+
     mapping(address => Staker) public stakers;
-
-    uint public tokensPerStake;
-
-    uint public totalStaked;
-
-    uint public distributionTime;
-    uint public rewardProduced;
-    uint public rewardTotal;
-    uint public allProduced;
-    
-    address public stakingToken;
-    address public rewardToken;
-    uint public producedTime;
 
     constructor(address _stakingToken, address _rewardToken, uint _distributionTime) {
         stakingToken = _stakingToken;
@@ -52,6 +50,8 @@ contract Staking is ReentrancyGuard, AccessControl{
         _setupRole(ADMIN, msg.sender);        
     }
 
+    /// @dev Sets the reward to be distributed within distribution time
+    /// @param _rewardTotal The value of the distributed reward
     function setRewardTotal(uint _rewardTotal) onlyRole(ADMIN) external {
         require(_rewardTotal > 0, '_rewardTotal must be > 0');
         require(Token(rewardToken).balanceOf(address(this)) >= _rewardTotal, 'The contract must have enough reward tokens');
@@ -61,6 +61,8 @@ contract Staking is ReentrancyGuard, AccessControl{
         rewardTotal = _rewardTotal;
     }
 
+    /// @dev Stakes the tokens
+    /// @param _amount The number of staked tokens
     function stake (uint _amount) nonReentrant external {
         require(_amount > 0, '_amount must be > 0');
         update();
@@ -72,6 +74,8 @@ contract Staking is ReentrancyGuard, AccessControl{
         emit Staked(msg.sender, _amount);
     }
 
+    /// @dev Withdraws the staked the tokens
+    /// @param _amount The number of withdrawn tokens
     function withdraw (uint _amount) nonReentrant external {
         require(_amount > 0, '_amount must be > 0');
         Staker storage staker = stakers[msg.sender];
@@ -84,6 +88,7 @@ contract Staking is ReentrancyGuard, AccessControl{
         emit Withdrawn(msg.sender, _amount);
     }
 
+    /// @dev Sends reward to the staker
     function getReward() nonReentrant external {
          update();
          uint reward = calcReward(msg.sender,  tokensPerStake);
@@ -94,6 +99,7 @@ contract Staking is ReentrancyGuard, AccessControl{
          }
     }
 
+    /// @dev Updates the reward produced so far and calculates tokens per stake
     function update() internal {
         uint rewardProducedAtNow = produced();
         if(rewardProducedAtNow > rewardProduced) {
@@ -105,6 +111,9 @@ contract Staking is ReentrancyGuard, AccessControl{
         }
     }
 
+    /// @dev Calculates the reward of the staker that is currently avaiable
+    /// @param _staker The staker address
+    /// @param _tps The value of tokens per staker
     function calcReward(address _staker, uint _tps) 
         private 
         view 
@@ -113,10 +122,13 @@ contract Staking is ReentrancyGuard, AccessControl{
             reward = (staker.balance*_tps)/(1e20) + staker.rewardAllowed - staker.rewardDebt - staker.distributed;
         }
 
+    /// @dev Calculates the reward produced so far
     function produced() private view returns (uint) {
         return allProduced + rewardTotal * (block.timestamp - producedTime) / distributionTime;
     }
     
+    /// @dev Returns the value of the reward  that is currently avaiable
+    /// @param _staker The staker address
     function getRewardOfStaker(address _staker) 
         public 
         view 
